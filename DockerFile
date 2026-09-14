@@ -10,12 +10,13 @@ COPY src ./src
 
 RUN mvn clean package -DskipTests
 
+
 FROM eclipse-temurin:25
 
 WORKDIR /app
 
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 10000
+EXPOSE 8888
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

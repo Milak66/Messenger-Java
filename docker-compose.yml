@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: funchat-postgres
+    restart: unless-stopped
+
+    environment:
+      POSTGRES_DB: funchat
+      POSTGRES_USER: funchat
+      POSTGRES_PASSWORD: funchat_password
+
+    ports:
+      - "5432:5432"
+
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: funchat-app
+    restart: unless-stopped
+
+    depends_on:
+      - postgres
+
+    ports:
+      - "8888:8888"
+
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/funchat
+      SPRING_DATASOURCE_USERNAME: funchat
+      SPRING_DATASOURCE_PASSWORD: funchat_password
+
+volumes:
+  postgres_data:
