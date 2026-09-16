@@ -291,6 +291,11 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/allUsers")
+    public List<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
     @DeleteMapping("/clearUsers")
     public ResponseEntity<Void> clear() {
 

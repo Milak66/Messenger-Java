@@ -101,4 +101,9 @@ public class MessagesController {
 
         return ResponseEntity.ok(messageDto);
     }
+
+    @GetMapping("/allMessages")
+    public List<Message> getAllMessages() {
+        return messageRepository.findAll();
+    }
 }
