@@ -3,6 +3,8 @@ package servers.serversPractice.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "messages")
 @Getter
@@ -26,4 +28,12 @@ public class Message {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
+
+    @Column(nullable = false)
+    private LocalDateTime sendTime;
+
+    @PrePersist
+    protected void onCreate() {
+        sendTime = LocalDateTime.now();
+    }
 }
