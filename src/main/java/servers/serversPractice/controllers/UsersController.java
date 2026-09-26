@@ -249,39 +249,41 @@ public class UsersController {
             return ResponseEntity.notFound().build();
         }
 
-        if (user.getChats() != null) {
-            List<Chat> chatsToDelete = chatRepository.findAll()
-                    .stream()
-                    .filter(chat -> chat.getMembers().contains(userId))
-                    .toList();
+        List<Chat> chatsToDelete = chatRepository.findAll()
+                .stream()
+                .filter(chat ->
+                        chat.getMembers() != null &&
+                                chat.getMembers().contains(userId)
+                )
+                .toList();
 
-            for (Chat chat : chatsToDelete) {
+        for (Chat chat : chatsToDelete) {
 
-                messageRepository.deleteByChat_Id(chat.getId());
+            messageRepository.deleteByChat_Id(chat.getId());
 
-                for (Integer memberId : chat.getMembers()) {
+            for (Integer memberId : chat.getMembers()) {
 
-                    if (!memberId.equals(userId)) {
+                if (!memberId.equals(userId)) {
 
-                        User member = userRepository.findById(memberId)
-                                .orElse(null);
+                    User member = userRepository
+                            .findById(memberId)
+                            .orElse(null);
 
-                        if (member != null) {
-                            member.getChats().remove(chat.getId());
-                            userRepository.save(member);
-                        }
+                    if (member != null && member.getChats() != null) {
+                        member.getChats().remove(chat.getId());
+                        userRepository.save(member);
                     }
                 }
             }
-
-            chatRepository.deleteAll(chatsToDelete);
         }
+
+        chatRepository.deleteAll(chatsToDelete);
+
+        messageRepository.deleteBySender_Id(userId);
 
         if (user.getAvatar() != null && !user.getAvatar().isBlank()) {
 
-            Path avatarPath = Paths.get(
-                    "." + user.getAvatar()
-            );
+            Path avatarPath = Paths.get("." + user.getAvatar());
 
             Files.deleteIfExists(avatarPath);
         }
