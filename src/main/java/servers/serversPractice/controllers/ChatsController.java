@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.*;
 
 import servers.serversPractice.dtos.ChatDto;
 import servers.serversPractice.entities.Chat;
-import servers.serversPractice.entities.Message;
 import servers.serversPractice.entities.User;
 import servers.serversPractice.repositories.ChatRepository;
 import servers.serversPractice.repositories.MessageRepository;
